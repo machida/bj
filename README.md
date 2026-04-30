@@ -1,5 +1,7 @@
 # Blackjack — Spinel AOT + WebAssembly
 
+**▶ https://machida.github.io/bj/**
+
 ブラウザで遊べるブラックジャック。ゲームロジックを **Ruby** で書き、
 [Spinel](https://github.com/matz/spinel) AOT コンパイラで **C** に変換し、
 [Emscripten](https://emscripten.org/) で **WebAssembly** にコンパイルする。
@@ -61,7 +63,7 @@ EMSDK_PYTHON=/opt/homebrew/opt/python@3.13/bin/python3.13 make
 │   └── blackjack.rb        # ゲームロジック（Ruby・Spinel 方言）
 ├── generated/
 │   └── blackjack.c         # Spinel が生成した C コード ※編集不要
-├── web/
+├── docs/
 │   ├── index.html          # UI（HTML + CSS インライン）
 │   ├── game.js             # JS ブリッジ（WASM ↔ DOM）
 │   ├── blackjack.js        # Emscripten 生成グルーコード ※編集不要
@@ -164,7 +166,7 @@ emcc generated/blackjack.c \
   -sINVOKE_RUN=0 \                 # main() を自動実行しない
   "-sEXPORTED_RUNTIME_METHODS=['callMain','FS']" \
   -lm \
-  -o web/blackjack.js
+  -o docs/blackjack.js
 ```
 
 Spinel のランタイム（`sp_runtime.h`）には GC、文字列管理、配列実装が含まれており、

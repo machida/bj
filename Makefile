@@ -2,8 +2,8 @@ SPINEL_DIR   = spinel
 SPINEL       = $(SPINEL_DIR)/spinel
 SRC_RB       = src/blackjack.rb
 GEN_C        = generated/blackjack.c
-WEB_JS       = web/blackjack.js
-WEB_WASM     = web/blackjack.wasm
+WEB_JS       = docs/blackjack.js
+WEB_WASM     = docs/blackjack.wasm
 
 # Python 3.10+ required by emscripten
 EMSDK_PYTHON ?= /opt/homebrew/opt/python@3.13/bin/python3.13
@@ -48,14 +48,14 @@ $(WEB_JS): $(GEN_C)
 # ── Dev server ───────────────────────────────────────────────────────────────
 serve:
 	@echo "Open http://localhost:8080"
-	python3 -m http.server 8080 --directory web
+	python3 -m http.server 8080 --directory docs
 
 # ── Sanity check ─────────────────────────────────────────────────────────────
 check:
 	@which ruby  >/dev/null 2>&1 && echo "✓ ruby  $$(ruby --version)"  || echo "✗ ruby not found"
 	@which emcc  >/dev/null 2>&1 && (EMSDK_PYTHON=$(EMSDK_PYTHON) emcc --version 2>&1 | head -1 | sed 's/^/✓ /') || echo "✗ emcc not found (brew install emscripten)"
 	@which node  >/dev/null 2>&1 && echo "✓ node  $$(node --version)" || echo "✗ node not found"
-	@test -f $(WEB_WASM) && echo "✓ WASM  $(WEB_WASM)" || echo "✗ WASM not built (run: make)"
+	@test -f $(WEB_WASM) && echo "✓ WASM  $(WEB_WASM)" || echo "✗ WASM not built yet — run: make"
 
 clean:
 	rm -rf generated $(WEB_JS) $(WEB_WASM)
