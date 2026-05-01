@@ -5,8 +5,9 @@ GEN_C        = generated/blackjack.c
 WEB_JS       = docs/blackjack.js
 WEB_WASM     = docs/blackjack.wasm
 
-# Python 3.10+ required by emscripten
-EMSDK_PYTHON ?= /opt/homebrew/opt/python@3.13/bin/python3.13
+# Python 3.10+ required by emscripten; override if `python3` on PATH is too old:
+#   EMSDK_PYTHON=/opt/homebrew/opt/python@3.13/bin/python3.13 make
+EMSDK_PYTHON ?= python3
 EMCC         = EMSDK_PYTHON=$(EMSDK_PYTHON) emcc
 
 EMCC_FLAGS   = -O2 \
@@ -20,7 +21,7 @@ EMCC_FLAGS   = -O2 \
                "-sEXPORTED_RUNTIME_METHODS=['callMain','FS']" \
                -lm
 
-.PHONY: all clean serve check
+.PHONY: all clean serve check test
 
 all: $(WEB_JS)
 
@@ -56,6 +57,9 @@ check:
 	@which emcc  >/dev/null 2>&1 && (EMSDK_PYTHON=$(EMSDK_PYTHON) emcc --version 2>&1 | head -1 | sed 's/^/✓ /') || echo "✗ emcc not found (brew install emscripten)"
 	@which node  >/dev/null 2>&1 && echo "✓ node  $$(node --version)" || echo "✗ node not found"
 	@test -f $(WEB_WASM) && echo "✓ WASM  $(WEB_WASM)" || echo "✗ WASM not built yet — run: make"
+
+test:
+	ruby test/blackjack_test.rb
 
 clean:
 	rm -rf generated $(WEB_JS) $(WEB_WASM)
